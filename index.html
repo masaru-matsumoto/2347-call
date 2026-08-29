@@ -1,445 +1,332 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#08090c">
-<title>23:47の着信</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050608"><title>23:47の着信</title>
 <style>
-:root{--bg:#08090c;--panel:#111319;--text:#e9e9e9;--muted:#8d919b;--line:#292d36;--accent:#d7d7d7}
-*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;min-height:100%}
-body{min-height:100vh;display:flex;justify-content:center}
-#app{width:min(720px,100%);min-height:100vh;padding:env(safe-area-inset-top) 20px env(safe-area-inset-bottom)}
-.screen{min-height:92vh;display:flex;flex-direction:column;justify-content:center;animation:fade .7s}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-h1{font-size:34px;letter-spacing:.12em;font-weight:500;margin:0 0 8px}.sub{color:var(--muted);font-size:13px;letter-spacing:.18em}
-.clock{font-variant-numeric:tabular-nums;font-size:52px;letter-spacing:.08em;margin:20px 0 34px}
-.story{font-size:17px;line-height:2;white-space:pre-line;margin:8px 0 28px}
-button{width:100%;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:16px;margin:7px 0;font-size:16px;text-align:left}
-button:active{transform:scale(.99);background:#191c23}
-.center{text-align:center}.small{font-size:13px;color:var(--muted);line-height:1.7}
-.danger{letter-spacing:.15em}.object-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.object-grid button{margin:0}
-#toast{position:fixed;left:50%;bottom:35px;transform:translateX(-50%);background:#e9e9e9;color:#111;padding:9px 15px;border-radius:20px;font-size:12px;opacity:0;transition:.25s;pointer-events:none}
-.end{font-size:12px;letter-spacing:.25em;color:var(--muted);margin-bottom:16px}
-.quote{border-left:2px solid #555;padding-left:16px;color:#c8c8c8}
-input{width:100%;font-size:28px;letter-spacing:.3em;text-align:center;background:#0d0f13;color:white;border:1px solid var(--line);border-radius:10px;padding:15px}
-</style>
-</head>
-<body><main id="app"></main><div id="toast"></div>
+*{box-sizing:border-box}html,body{margin:0;background:#050608;color:#eee;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;min-height:100%}
+body{display:flex;justify-content:center}#app{width:min(720px,100%);min-height:100vh;padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom)}
+.screen{min-height:94vh;display:flex;flex-direction:column;justify-content:center;animation:f .45s}@keyframes f{from{opacity:0}to{opacity:1}}
+h1{font-size:32px;letter-spacing:.12em;font-weight:500;margin:8px 0}.muted{color:#888;font-size:13px}.story{font-size:17px;line-height:2;white-space:pre-line}
+button{width:100%;background:#11141a;color:#eee;border:1px solid #2b303a;border-radius:12px;padding:15px;margin:6px 0;font-size:16px;text-align:left}
+.center{text-align:center}.clock{font-size:52px;font-variant-numeric:tabular-nums;letter-spacing:.08em;margin:22px 0}
+.room{position:relative;height:62vh;min-height:430px;border:1px solid #242933;border-radius:16px;overflow:hidden;background:linear-gradient(#0b0d12,#08090d)}
+.obj{position:absolute;background:#11151c;border:1px solid #343b47;border-radius:10px;color:#bbb;padding:10px;text-align:center;font-size:13px}
+.obj:active{background:#1a2029}.photo{left:8%;top:18%;width:25%;height:18%}.clockobj{right:8%;top:10%;width:25%}.mirror{left:10%;bottom:13%;width:25%;height:24%}.fridge{right:7%;bottom:10%;width:29%;height:38%}.door{left:40%;top:18%;width:20%;height:58%}.phone{left:37%;bottom:4%;width:26%}
+.note{border-left:2px solid #666;padding-left:14px;color:#c9c9c9}.tiny{font-size:12px;color:#777;line-height:1.7}
+.call{background:radial-gradient(circle at 50% 20%,#303642,#101216 60%);text-align:center;min-height:94vh;padding-top:12vh}
+.avatar{width:82px;height:82px;margin:auto;border-radius:50%;background:#777;display:grid;place-items:center;font-size:30px}.caller{font-size:34px;margin:14px}.callsub{color:#bbb}
+.callbuttons{display:flex;gap:40px;justify-content:center;margin-top:auto;padding-bottom:12vh}.round{width:74px;height:74px;border-radius:50%;border:0;text-align:center;margin:0;font-size:13px}.decline{background:#b33}.accept{background:#398d54}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:50}.end{font-size:12px;letter-spacing:.25em;color:#888}
+input{width:100%;background:#0d1015;color:#fff;border:1px solid #333;border-radius:10px;padding:14px;font-size:26px;letter-spacing:.3em;text-align:center}
+</style></head>
+<body><main id="app"></main><div id="flash"></div>
 <script>
 const A=document.getElementById('app');
-let state={seen:new Set(),loop:Number(localStorage.getItem('2347_loop')||0),hint:0};
-function saveLoop(){localStorage.setItem('2347_loop',String(state.loop))}
-function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.opacity=1;setTimeout(()=>x.style.opacity=0,1400)}
-function screen(html){A.innerHTML='<section class="screen">'+html+'</section>';window.scrollTo(0,0)}
-function btn(label,fn){return `<button onclick="${fn}">${label}</button>`}
+let loop=+(localStorage.getItem('call2347loop')||0), clues=new Set(), failures=+(localStorage.getItem('call2347fail')||0);
+let ctx=null,rain=null;
+function S(h){A.innerHTML='<section class="screen">'+h+'</section>';scrollTo(0,0)}
+function B(t,f){return `<button onclick="${f}">${t}</button>`}
+function audio(){if(!ctx)ctx=new (AudioContext||webkitAudioContext)()}
+function tone(f,d=.12,v=.025){try{audio();let o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=f;o.type='sine';g.gain.value=v;o.connect(g);g.connect(ctx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);o.stop(ctx.currentTime+d)}catch(e){}}
+function ring(){audio(); [0,.45,.9].forEach(x=>setTimeout(()=>{tone(660,.18,.035);setTimeout(()=>tone(880,.2,.028),130)},x*1000))}
+function knock(){tone(115,.08,.04);setTimeout(()=>tone(100,.1,.04),180)}
 function title(){
- let changed=state.loop>0;
- screen(`<div class="center"><div class="sub">${changed?'あなたは、この夜を知っている。':'SHORT MYSTERY'}</div>
- <h1>23:47の着信</h1><div class="clock">${changed?'23:46':'23:47'}</div>
- <p class="small">${changed?'次は、間違えないで。':'音を出して遊ぶと、少しだけ怖くなります。'}</p>
- ${btn(changed?'もう一度、夜へ':'はじめる','intro()')}
- <button onclick="resetGame()" class="small">記憶を消して最初から</button></div>`)
+ let x=loop?`<p class="muted">${loop==1?'……この画面を、前にも見た気がする。':'まだ、覚えてる？'}</p>`:`<p class="muted">SHORT MYSTERY</p>`;
+ S(`<div class=center>${x}<h1>23:47の着信</h1><div class=clock>${loop?'23:46':'23:47'}</div><p class=tiny>音量は小さめのまま、音をONにしてください。</p>${B(loop?'もう一度、夜へ':'はじめる','start()')}<button class=tiny onclick="reset()">最初から</button></div>`)
 }
-function beep(freq=440,d=.08){
- try{let c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.frequency.value=freq;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.05,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.start();o.stop(c.currentTime+d)}catch(e){}
+function start(){audio(); tone(180,.08,.015); S(`<p class=story>${loop?`雨の音。
+
+目を開けた瞬間、妙な感覚がした。
+
+<strong>この天井を、知っている。</strong>
+
+いや――「知っている」ではない。
+ついさっき見たような……。
+
+時計は23:46。`:`雨の夜。
+
+見覚えがあるような、ないような部屋で目を覚ました。
+
+自分の名前さえ、すぐには出てこない。
+
+壁の時計は23:47。`}</p>${B('部屋を見る','room()')}`)}
+function room(){
+ S(`<p class=muted>${loop?'二度目の部屋':'部屋'}</p><div class=room>
+ <button class="obj photo" onclick="inspect('photo')">写真立て</button>
+ <button class="obj clockobj" onclick="inspect('clock')">時計</button>
+ <button class="obj mirror" onclick="inspect('mirror')">鏡</button>
+ <button class="obj fridge" onclick="inspect('fridge')">冷蔵庫</button>
+ <button class="obj door" onclick="inspect('door')">玄関</button>
+ <button class="obj phone" onclick="inspect('phone')">スマホ</button>
+ </div><p class=tiny>${loop?'同じ部屋なのに、前とは違って見える。':''}</p>`)
 }
-function intro(){
- beep(660,.12);
- screen(`<div class="sub">23:47</div><p class="story">雨の音で目が覚めた。
+function inspect(x){
+ clues.add(x); let t='', extra='';
+ if(x==='photo') t=loop?`写真の男と、知らない女。
 
-……違う。
-眠っていたのかどうかさえ、よく分からない。
+……待て。
 
-見覚えのあるような、ないような部屋。
-手の中にはスマートフォン。
+<strong>この写真を俺は知っている。</strong>
 
-画面が震える。
+だが女を知っているのではない。
+「この写真を見た」という記憶だけがある。
 
-発信者の欄に表示されている名前は――
+写真立てを持ち上げると、裏に薄い筆圧の跡がある。`: `男と、知らない女が笑っている。
 
-<strong>「俺」</strong></p>${btn('電話に出る','call()')}${btn('出ない','ignoreCall()')}`)
+男は自分によく似ている。
+
+「……俺、なのか？」
+
+写真立ては妙に重い。`;
+ if(x==='clock') t=loop?`23:46。
+
+秒針がない。
+
+それなのに、次に何が起こるかを身体だけが知っている。
+
+<strong>あと一分で、電話が鳴る。</strong>`:`23:47。
+
+秒針がない。壊れているのだろうか。`;
+ if(x==='mirror') t=loop?`鏡の自分。
+
+写真の男によく似ている。
+
+今度は気づく。
+
+<strong>写真の男の左眉には傷がある。
+鏡の自分にはない。</strong>`:`ひどく青ざめた男が映っている。
+
+自分だ。
+
+……たぶん。`;
+ if(x==='fridge') t=loop?`冷蔵庫の扉。
+
+昨日は気づかなかった紙が、磁石の下から数ミリだけ覗いている。
+
+引き抜く。
+
+「23:47より前に眠ること
+　記憶再生が始まった場合は――」
+
+そこから先は破れている。`:`牛乳、卵、レモン。
+
+生活のメモが貼られている。
+
+その下に別の紙が重なっているようだが、端しか見えない。`;
+ if(x==='door'){knock();t=loop?`ドアスコープの向こうは暗い。
+
+その瞬間。
+
+……コン、コン。
+
+まだ誰も来ていないはずなのに。
+
+<strong>「まだ開けないで」</strong>
+
+女の声がした気がした。`:`玄関。
+
+ドアスコープの向こうには誰もいない。
+
+なのに、濡れた靴の匂いがする。`}
+ if(x==='phone') { t=loop?`ロック画面。
+
+なぜか暗証番号の最初の二桁だけ分かる。
+
+<strong>23</strong>
+
+残り二桁は――この夜の中にある。`:`自分のものらしいスマホ。
+
+ロックされている。
+
+4桁の暗証番号。`; extra=B('暗証番号を試す','code()')}
+ S(`<p class=story>${t}</p>${extra}${B('部屋へ戻る','room()')}${clues.size>=3?B('そのとき――','incoming()'):''}`)
 }
-function call(){
- beep(330,.1);
- screen(`<p class="story quote">「よく聞け。あと少しでインターホンが鳴る」
+function incoming(){ring(); S(`<div class=call><div class=avatar>👤</div><div class=caller>俺</div><div class=callsub>携帯電話</div><div class=callbuttons><button class="round decline" onclick="decline()">拒否</button><button class="round accept" onclick="answer()">応答</button></div></div>`)}
+function decline(){fail(`着信を拒否した。
 
-電話の声は、自分の声だった。
+すぐに玄関から女の声がする。
 
-「女が来る。でも絶対に玄関を開けるな」
+「お願い。今度こそ――」
 
-『誰だ、お前は』
+<strong>今度こそ？</strong>
 
-数秒の沈黙。
+画面が暗くなる。
 
-「……お前だよ」
+最後に時計を見る。
 
-通話が切れた。</p>
-<p class="story">その瞬間。
+23:47。`)}
+function answer(){tone(260,.05,.02);S(`<p class="story note">「よく聞け」
 
-――ピンポーン。</p>
-${btn('玄関へ行く','door()')}${btn('先に部屋を調べる','room()')}`)
-}
-function ignoreCall(){
- state.loop++;saveLoop();
- end('SILENT END',`着信を無視した。
+自分と同じ声。
 
-すぐにインターホンが鳴った。
+「女が来る。玄関を開けるな」
 
-「お願い。開けて」
+『お前は誰だ』
 
-知らない女の声。
+${loop?`「……その質問も、前にした」
 
-あなたは息を殺した。
+背中が冷える。`:`数秒の沈黙。
 
-やがて足音は消えた。
+「俺だ」`}
 
-翌朝――というものは、来なかった。
-
-時計はずっと、23:47を指していた。`)
-}
-function door(){
- screen(`<p class="story">ドアスコープを覗く。
-
-女が立っている。三十歳前後だろうか。
-濡れた髪。青ざめた顔。
+――ピンポーン。</p>${B('玄関へ','woman()')}${B('電話を切って部屋を調べる','room()')}`)}
+function woman(){knock();S(`<p class=story>ドアスコープの向こうに女がいる。
 
 知らない。
 
-本当に、知らない。
+なのに${loop?'――この姿勢まで、知っている。':'、写真の女だ。'}
 
-女はドアに額をつけた。
+「お願い。開けて」
 
-「お願い……開けて。今度こそ間に合うから」
+『誰なんだ？』
 
-<strong>今度こそ？</strong></p>
-${btn('開ける','openDoorEarly()')}${btn('「あなたは誰？」と聞く','askWoman()')}${btn('部屋を調べる','room()')}`)
-}
-function askWoman(){
- state.seen.add('woman');
- screen(`<p class="story">「あなたは誰？」
+${loop?`女は答えない。
 
-ドアの向こうが静かになる。
+代わりに言う。
 
-やがて女は、小さく答えた。
+「……今回は、写真の裏を見た？」`:`「やっぱり……覚えてないんだね」`}</p>
+${loop?B('「写真の裏？」','photoBack()'):''}${B('開けない','lockedEnd()')}${B('開ける','whiteEnd()')}${B('部屋へ戻る','room()')}`)}
+function photoBack(){S(`<p class=story>写真立ての裏を指でなぞる。
 
-「……やっぱり、覚えてないんだね」
+薄い紙が二重になっていた。
+剥がすと、文字が現れる。
 
-『俺を知ってるのか？』
+<strong>「あなたが私を知らなくても、
+あなたはあなた。
+彼にならなくていい。」</strong>
 
-「知ってる。でも――」
+署名――ミナ。
 
-女が何かを言いかけた瞬間、スマホが震えた。
+知らない名前。
 
-<strong>非通知着信。</strong></p>
-${btn('非通知に出る','secondCall()')}${btn('女に続きを聞く','openDoorEarly()')}${btn('部屋を調べる','room()')}`)
-}
-function room(){
- screen(`<div class="sub">ROOM</div><p class="story">何かがおかしい。
-この部屋を知っている気がする。
-なのに、思い出そうとすると頭の奥が白くなる。
+なのに胸が痛む。</p>${B('スマホを調べる','code()')}`)}
+function code(){S(`<p class=story>暗証番号を入力する。</p><input id=c maxlength=4 inputmode=numeric placeholder="••••">${B('解除','check()')}<p class=tiny>${failures>=2?'ヒント：この夜で最も繰り返される時刻。':''}</p>`)}
+function check(){let v=document.getElementById('c').value;if(v==='2347')unlock();else{failures++;localStorage.setItem('call2347fail',failures);tone(90,.08,.02);document.querySelector('.tiny').textContent=failures>=2?'指は「23」まで覚えている。残りは、この夜で何度も見た数字。':'違う。'}}
+function unlock(){S(`<p class=story>2347。
 
-どこを調べる？</p>
-<div class="object-grid">
-${btn('写真立て',"inspect('photo')")}
-${btn('洗面所',"inspect('bath')")}
-${btn('冷蔵庫',"inspect('fridge')")}
-${btn('スマートフォン',"inspect('phone')")}
-</div>
-${state.seen.size>=3?btn('玄関へ戻る','doorAfterSearch()'):''}
-<p class="small">調べた場所：${state.seen.size} / 4</p>`)
-}
-function inspect(x){
- state.seen.add(x);
- let t='';
- if(x==='photo')t=`写真には、自分とあの女が写っている。
+ロックが開く。
 
-海。桜。どこかの遊園地。
+連絡先に、妙な登録がある。
 
-どの写真でも、二人は笑っている。
+<strong>「俺」</strong>
 
-だが――女の顔に覚えはない。`;
- if(x==='bath')t=`歯ブラシが二本。
-青と白。
+そして、その下に別の男性名。
 
-鏡の端に、小さな付箋。
+着信履歴を見る。
 
-「薬、忘れないで」
+23:47に電話をかけてきた番号は、
+「自分の番号」ではない。
 
-女の字なのだろうか。`;
- if(x==='fridge')t=`冷蔵庫にメモが貼られている。
+<strong>誰かがその番号を「俺」と登録しただけだ。</strong>
 
-「牛乳
-　卵
-　レモン
-　23:47」
+ボイスメモが一件。
 
-最後の数字だけ、赤いペンで二重線が引かれている。`;
- if(x==='phone')t=`ロック解除を求められる。
-4桁の暗証番号。
+「23:47 / 再生 00:18」</p>${B('再生する','memo()')}`)}
+function memo(){tone(210,.12,.02);S(`<p class="story note">「もしこれを聞いているなら、また始まったんだ」
 
-なぜか指が「2」「3」まで勝手に動く。
+自分に似た声。
 
-その先が分からない。`;
- screen(`<p class="story">${t}</p>${x==='phone'?btn('暗証番号を入力する','code()'):''}${btn('ほかを調べる','room()')}`)
-}
-function code(){
- screen(`<p class="story">4桁の数字を入力。</p><input id="code" maxlength="4" inputmode="numeric" placeholder="••••">
- ${btn('解除','checkCode()')}<p class="small">${state.loop>=2?'ヒント：時刻を「数字」として見て。':''}</p>`)
-}
-function checkCode(){
- let v=document.getElementById('code').value;
- if(v==='2347'){state.seen.add('unlocked');phoneUnlocked()}
- else{state.hint++;toast('違う。'); if(state.hint>=2) setTimeout(()=>{let p=document.querySelector('.small');if(p)p.textContent='指は「23」まで覚えている。残りは、この夜で何度も見た数字。'},300)}
-}
-function phoneUnlocked(){
- screen(`<p class="story">ロックが開いた。
+「彼女を知らない。それで正しい」
 
-写真フォルダには、あの女の写真が何百枚もある。
+雑音。
 
-そして「ボイスメモ」に、今日の日付の録音が一件。
+「俺の記憶が、お前を俺だと思わせる」
 
-<strong>23:47　再生時間 00:18</strong>
+女の泣き声。
 
-まだ23:47なのに？
+「お願い。もう彼にならなくていい」
 
-さらに連絡先を見る。
+録音終了。</p>${B('鏡を見る','reveal()')}`)}
+function reveal(){S(`<p class=story>鏡。
 
-自分の番号として登録されている番号が――
+左眉に傷はない。
 
-<strong>二つある。</strong></p>
-${btn('ボイスメモを再生する','memo()')}`)
-}
-function memo(){
- beep(220,.15);
- screen(`<p class="story quote">雑音。
+写真の男にはある。
 
-男の声。
+<strong>写真の男は、自分ではない。</strong>
 
-「もしこれを聞いてるなら、また失敗したんだ」
+ようやく分かる。
 
-自分の声だ。
+失った記憶を取り戻しているのではない。
 
-「彼女を知らないと思っても、それで正しい。写真も嘘じゃない」
-
-激しい物音。
-
-最後に、女の声。
-
-「お願い、名前を呼んで――」
-
-録音はそこで終わっている。</p>
-${btn('玄関へ戻る','doorAfterSearch()')}`)
-}
-function doorAfterSearch(){
- let unlocked=state.seen.has('unlocked');
- screen(`<p class="story">玄関の向こうに、まだ女はいる。
-
-「お願い。もう時間がない」
-
-スマホを見る。
-
-23:47。
-
-電話の「自分」は開けるなと言った。
-写真の中の自分は、この女を愛しているように見える。
-
-でも自分には――彼女の記憶が一つもない。</p>
-${unlocked?btn('「名前を教えて」','nameRoute()'):''}
-${btn('電話の自分を信じる','trustCall()')}
-${btn('女を信じて開ける','openDoorEarly()')}
-${state.loop>0?btn('どちらも信じない','thirdWay()'):''}`)
-}
-function secondCall(){
- screen(`<p class="story quote">「開けるな」
-
-今度の声も、自分。
-
-だが最初の電話と違う。
-
-背後で――女が泣いている。
-
-「お前は、また同じ間違いをする」
-
-『何の間違いだ』
-
-「自分が誰かを、決めつけることだ」</p>${btn('部屋を調べる','room()')}`)
-}
-function trustCall(){
- state.loop++;saveLoop();
- end('LOCKED END',`あなたは鍵を握りしめた。
+最初から、自分のものではない記憶を
+「思い出して」いた。</p>${B('玄関を開ける','trueEnd()')}`)}
+function lockedEnd(){fail(`鍵を握りしめる。
 
 「帰ってくれ」
 
-ドアの向こうで、女が泣いた。
+女はしばらく黙っていた。
 
-「……ごめんね」
+やがて。
 
-午前0時。
+「……彼を守らなくていいの」
 
-スマホに通知が届く。
+足音が遠ざかる。
 
-送信者――「俺」。
+電話がもう一度鳴る。
 
-本文は一行。
+表示は――「俺」。
 
-「だから言っただろ。開けるな」
+今度の声は言う。
 
-その文を読んだ瞬間、あなたは気づく。
+「違う。俺を守るな」
 
-電話の声は、一度も
-「俺がお前だ」とは言っていなかった。`)
-}
-function openDoorEarly(){
- state.loop++;saveLoop();
- end('WHITE END',`鍵を開ける。
+「彼女を守れ」
 
-女はあなたを見るなり、泣きながら抱きついた。
+時計は23:47から動かない。`)}
+function whiteEnd(){fail(`鍵を開ける。
 
-不思議なほど、その体温を知っている気がした。
+女があなたを見て、泣く。
 
-「よかった……」
+「……まだ早かった」
 
-その瞬間、視界が白く弾ける。
+抱きしめられた瞬間、
+知らないはずの記憶が洪水のように流れ込む。
 
-最後に聞こえたのは、自分の声。
+海。桜。病室。
 
-「まだ早い」
+そして――23:47。
 
-――23:47。`)
-}
-function thirdWay(){
- screen(`<p class="story">あなたは電話も、女も信じない。
+視界が白く弾ける。`)}
+function fail(t){loop++;localStorage.setItem('call2347loop',loop);S(`<div class=end>END</div><p class=story>${t}</p>${B('タイトルへ戻る','title()')}`)}
+function trueEnd(){localStorage.setItem('call2347true','1');S(`<div class=end>TRUE END</div><p class=story>ドアを開ける。
 
-代わりに、自分の記憶を疑う。
+女――ミナは、あなたの顔を見つめる。
 
-いや。
+「初めまして」
 
-<strong>「記憶を失った」という前提そのものを疑う。</strong>
+その言葉で、すべてが終わった。
 
-知らないものを「忘れた」と呼ぶ必要はない。
+写真も生活の痕跡も本物。
+この部屋で彼女と暮らしていた男も実在した。
 
-では、写真の中にいる男は――誰だ？</p>
-${state.seen.has('unlocked')?btn('二つの「自分の番号」を調べる','reveal1()'):btn('スマホのロックを解除する','code()')}`)
-}
-function nameRoute(){
- screen(`<p class="story">『名前を教えて』
-
-長い沈黙。
-
-「……ミナ」
-
-何も思い出さない。
-
-それなのに。
-
-胸だけが、痛い。
-
-女――ミナが続ける。
-
-「あなたの名前は？」
-
-答えようとして、言葉が止まった。
-
-<strong>自分の名前が、分からない。</strong></p>
-${state.loop>0?btn('「俺は……誰だ？」','thirdWay()'):btn('ドアを開ける','openDoorEarly()')}`)
-}
-function reveal1(){
- screen(`<p class="story">連絡先にある二つの番号。
-
-一つには「俺」。
-もう一つには、自分の名前らしきもの。
-
-だが着信履歴を見ると――
-
-23:47に電話をかけてきたのは
-<strong>「俺」と登録された番号。</strong>
-
-つまり画面に表示された「俺」は、
-電話の相手が自分だったという意味ではない。
-
-<strong>誰かが、その番号を「俺」という名前で登録した。</strong></p>
-${btn('写真の男を見る','reveal2()')}`)
-}
-function reveal2(){
- screen(`<p class="story">もう一度、写真を見る。
-
-ずっと「自分」だと思っていた男。
-
-鏡を見る。
-
-似ている。
-
-だが同じではない。
-
-写真の男の左眉には、小さな傷がある。
-
-鏡の中の自分には――ない。
-
-その瞬間、頭の奥に、他人の記憶が流れ込む。
-
-病室。
-機械。
-ミナの泣き声。
-
-そして男の声。
-
-「俺が消えても、記憶だけは残せるんだろ？」</p>
-${btn('玄関を開ける','trueEnd()')}`)
-}
-function trueEnd(){
- localStorage.setItem('2347_true','1');
- screen(`<div class="end">TRUE END</div>
- <p class="story">ドアを開ける。
-
-ミナはあなたの顔を見て、泣いた。
-嬉しそうには見えなかった。
-
-「……やっぱり、違う人なんだね」
-
-あなたの脳には、死んだ男の記憶の一部が移植されていた。
-
-写真も、歯ブラシも、メモも本物だった。
-ここで彼女と暮らしていたのも、本当。
-
-ただし――
-
-<strong>暮らしていたのは、あなたではない。</strong>
-
-だから彼女を知らないという感覚も、本物だった。
+ただし、それはあなたではない。
 
 23:47。
+男が亡くなった時刻。
 
-それは男が亡くなった時刻。
-そして毎晩、移植された記憶が最も強く再生される時刻。
+あなたには彼の記憶の一部が移植されていた。
+毎晩23:47、その記憶が強く再生される。
 
-電話の「俺」は、男が生前に残した自動音声だった。
+電話の「俺」は、生前の男が残した自動音声。
 
 彼はあなたを守ろうとしていたのではない。
 
-ミナを守ろうとしていた。
+<strong>ミナを、自分の記憶から守ろうとしていた。</strong>
 
-自分の記憶を持つ別人が、
-自分だと思い込み、
-彼女の人生に入り込まないように。
-
-ミナが静かに言う。
+ミナが言う。
 
 「あなたは、あなたでいて」
 
-初めて時計が動く。
+時計を見る。
 
-<strong>23:48。</strong></p>
-<p class="story quote">知らない女だった。
+23:48。
 
-だからこそ、
-彼女を愛していた記憶だけが残っていることが、
-こんなにも悲しかった。</p>
-${btn('タイトルへ戻る','afterTrue()')}`)
-}
-function afterTrue(){state.loop=Math.max(state.loop,1);saveLoop();title()}
-function end(name,text){screen(`<div class="end">${name}</div><p class="story">${text}</p>${btn('タイトルへ戻る','title()')}`)}
-function resetGame(){localStorage.removeItem('2347_loop');localStorage.removeItem('2347_true');state={seen:new Set(),loop:0,hint:0};title()}
+初めて、一分進んだ。</p><p class="story note">彼女を知らない。
+
+その感覚だけが、
+最初から最後まで正しかった。</p>${B('タイトルへ','title()')}`)}
+function reset(){localStorage.removeItem('call2347loop');localStorage.removeItem('call2347fail');localStorage.removeItem('call2347true');loop=0;failures=0;clues=new Set();title()}
 title();
 </script></body></html>
