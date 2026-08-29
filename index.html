@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090c">
+<title>23:47の着信</title>
+<style>
+:root{--bg:#08090c;--panel:#111319;--text:#e9e9e9;--muted:#8d919b;--line:#292d36;--accent:#d7d7d7}
+*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;min-height:100%}
+body{min-height:100vh;display:flex;justify-content:center}
+#app{width:min(720px,100%);min-height:100vh;padding:env(safe-area-inset-top) 20px env(safe-area-inset-bottom)}
+.screen{min-height:92vh;display:flex;flex-direction:column;justify-content:center;animation:fade .7s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+h1{font-size:34px;letter-spacing:.12em;font-weight:500;margin:0 0 8px}.sub{color:var(--muted);font-size:13px;letter-spacing:.18em}
+.clock{font-variant-numeric:tabular-nums;font-size:52px;letter-spacing:.08em;margin:20px 0 34px}
+.story{font-size:17px;line-height:2;white-space:pre-line;margin:8px 0 28px}
+button{width:100%;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:16px;margin:7px 0;font-size:16px;text-align:left}
+button:active{transform:scale(.99);background:#191c23}
+.center{text-align:center}.small{font-size:13px;color:var(--muted);line-height:1.7}
+.danger{letter-spacing:.15em}.object-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.object-grid button{margin:0}
+#toast{position:fixed;left:50%;bottom:35px;transform:translateX(-50%);background:#e9e9e9;color:#111;padding:9px 15px;border-radius:20px;font-size:12px;opacity:0;transition:.25s;pointer-events:none}
+.end{font-size:12px;letter-spacing:.25em;color:var(--muted);margin-bottom:16px}
+.quote{border-left:2px solid #555;padding-left:16px;color:#c8c8c8}
+input{width:100%;font-size:28px;letter-spacing:.3em;text-align:center;background:#0d0f13;color:white;border:1px solid var(--line);border-radius:10px;padding:15px}
+</style>
+</head>
+<body><main id="app"></main><div id="toast"></div>
+<script>
+const A=document.getElementById('app');
+let state={seen:new Set(),loop:Number(localStorage.getItem('2347_loop')||0),hint:0};
+function saveLoop(){localStorage.setItem('2347_loop',String(state.loop))}
+function toast(t){let x=document.getElementById('toast');x.textContent=t;x.style.opacity=1;setTimeout(()=>x.style.opacity=0,1400)}
+function screen(html){A.innerHTML='<section class="screen">'+html+'</section>';window.scrollTo(0,0)}
+function btn(label,fn){return `<button onclick="${fn}">${label}</button>`}
+function title(){
+ let changed=state.loop>0;
+ screen(`<div class="center"><div class="sub">${changed?'あなたは、この夜を知っている。':'SHORT MYSTERY'}</div>
+ <h1>23:47の着信</h1><div class="clock">${changed?'23:46':'23:47'}</div>
+ <p class="small">${changed?'次は、間違えないで。':'音を出して遊ぶと、少しだけ怖くなります。'}</p>
+ ${btn(changed?'もう一度、夜へ':'はじめる','intro()')}
+ <button onclick="resetGame()" class="small">記憶を消して最初から</button></div>`)
+}
+function beep(freq=440,d=.08){
+ try{let c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.frequency.value=freq;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(.05,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.start();o.stop(c.currentTime+d)}catch(e){}
+}
+function intro(){
+ beep(660,.12);
+ screen(`<div class="sub">23:47</div><p class="story">雨の音で目が覚めた。
+
+……違う。
+眠っていたのかどうかさえ、よく分からない。
+
+見覚えのあるような、ないような部屋。
+手の中にはスマートフォン。
+
+画面が震える。
+
+発信者の欄に表示されている名前は――
+
+<strong>「俺」</strong></p>${btn('電話に出る','call()')}${btn('出ない','ignoreCall()')}`)
+}
+function call(){
+ beep(330,.1);
+ screen(`<p class="story quote">「よく聞け。あと少しでインターホンが鳴る」
+
+電話の声は、自分の声だった。
+
+「女が来る。でも絶対に玄関を開けるな」
+
+『誰だ、お前は』
+
+数秒の沈黙。
+
+「……お前だよ」
+
+通話が切れた。</p>
+<p class="story">その瞬間。
+
+――ピンポーン。</p>
+${btn('玄関へ行く','door()')}${btn('先に部屋を調べる','room()')}`)
+}
+function ignoreCall(){
+ state.loop++;saveLoop();
+ end('SILENT END',`着信を無視した。
+
+すぐにインターホンが鳴った。
+
+「お願い。開けて」
+
+知らない女の声。
+
+あなたは息を殺した。
+
+やがて足音は消えた。
+
+翌朝――というものは、来なかった。
+
+時計はずっと、23:47を指していた。`)
+}
+function door(){
+ screen(`<p class="story">ドアスコープを覗く。
+
+女が立っている。三十歳前後だろうか。
+濡れた髪。青ざめた顔。
+
+知らない。
+
+本当に、知らない。
+
+女はドアに額をつけた。
+
+「お願い……開けて。今度こそ間に合うから」
+
+<strong>今度こそ？</strong></p>
+${btn('開ける','openDoorEarly()')}${btn('「あなたは誰？」と聞く','askWoman()')}${btn('部屋を調べる','room()')}`)
+}
+function askWoman(){
+ state.seen.add('woman');
+ screen(`<p class="story">「あなたは誰？」
+
+ドアの向こうが静かになる。
+
+やがて女は、小さく答えた。
+
+「……やっぱり、覚えてないんだね」
+
+『俺を知ってるのか？』
+
+「知ってる。でも――」
+
+女が何かを言いかけた瞬間、スマホが震えた。
+
+<strong>非通知着信。</strong></p>
+${btn('非通知に出る','secondCall()')}${btn('女に続きを聞く','openDoorEarly()')}${btn('部屋を調べる','room()')}`)
+}
+function room(){
+ screen(`<div class="sub">ROOM</div><p class="story">何かがおかしい。
+この部屋を知っている気がする。
+なのに、思い出そうとすると頭の奥が白くなる。
+
+どこを調べる？</p>
+<div class="object-grid">
+${btn('写真立て',"inspect('photo')")}
+${btn('洗面所',"inspect('bath')")}
+${btn('冷蔵庫',"inspect('fridge')")}
+${btn('スマートフォン',"inspect('phone')")}
+</div>
+${state.seen.size>=3?btn('玄関へ戻る','doorAfterSearch()'):''}
+<p class="small">調べた場所：${state.seen.size} / 4</p>`)
+}
+function inspect(x){
+ state.seen.add(x);
+ let t='';
+ if(x==='photo')t=`写真には、自分とあの女が写っている。
+
+海。桜。どこかの遊園地。
+
+どの写真でも、二人は笑っている。
+
+だが――女の顔に覚えはない。`;
+ if(x==='bath')t=`歯ブラシが二本。
+青と白。
+
+鏡の端に、小さな付箋。
+
+「薬、忘れないで」
+
+女の字なのだろうか。`;
+ if(x==='fridge')t=`冷蔵庫にメモが貼られている。
+
+「牛乳
+　卵
+　レモン
+　23:47」
+
+最後の数字だけ、赤いペンで二重線が引かれている。`;
+ if(x==='phone')t=`ロック解除を求められる。
+4桁の暗証番号。
+
+なぜか指が「2」「3」まで勝手に動く。
+
+その先が分からない。`;
+ screen(`<p class="story">${t}</p>${x==='phone'?btn('暗証番号を入力する','code()'):''}${btn('ほかを調べる','room()')}`)
+}
+function code(){
+ screen(`<p class="story">4桁の数字を入力。</p><input id="code" maxlength="4" inputmode="numeric" placeholder="••••">
+ ${btn('解除','checkCode()')}<p class="small">${state.loop>=2?'ヒント：時刻を「数字」として見て。':''}</p>`)
+}
+function checkCode(){
+ let v=document.getElementById('code').value;
+ if(v==='2347'){state.seen.add('unlocked');phoneUnlocked()}
+ else{state.hint++;toast('違う。'); if(state.hint>=2) setTimeout(()=>{let p=document.querySelector('.small');if(p)p.textContent='指は「23」まで覚えている。残りは、この夜で何度も見た数字。'},300)}
+}
+function phoneUnlocked(){
+ screen(`<p class="story">ロックが開いた。
+
+写真フォルダには、あの女の写真が何百枚もある。
+
+そして「ボイスメモ」に、今日の日付の録音が一件。
+
+<strong>23:47　再生時間 00:18</strong>
+
+まだ23:47なのに？
+
+さらに連絡先を見る。
+
+自分の番号として登録されている番号が――
+
+<strong>二つある。</strong></p>
+${btn('ボイスメモを再生する','memo()')}`)
+}
+function memo(){
+ beep(220,.15);
+ screen(`<p class="story quote">雑音。
+
+男の声。
+
+「もしこれを聞いてるなら、また失敗したんだ」
+
+自分の声だ。
+
+「彼女を知らないと思っても、それで正しい。写真も嘘じゃない」
+
+激しい物音。
+
+最後に、女の声。
+
+「お願い、名前を呼んで――」
+
+録音はそこで終わっている。</p>
+${btn('玄関へ戻る','doorAfterSearch()')}`)
+}
+function doorAfterSearch(){
+ let unlocked=state.seen.has('unlocked');
+ screen(`<p class="story">玄関の向こうに、まだ女はいる。
+
+「お願い。もう時間がない」
+
+スマホを見る。
+
+23:47。
+
+電話の「自分」は開けるなと言った。
+写真の中の自分は、この女を愛しているように見える。
+
+でも自分には――彼女の記憶が一つもない。</p>
+${unlocked?btn('「名前を教えて」','nameRoute()'):''}
+${btn('電話の自分を信じる','trustCall()')}
+${btn('女を信じて開ける','openDoorEarly()')}
+${state.loop>0?btn('どちらも信じない','thirdWay()'):''}`)
+}
+function secondCall(){
+ screen(`<p class="story quote">「開けるな」
+
+今度の声も、自分。
+
+だが最初の電話と違う。
+
+背後で――女が泣いている。
+
+「お前は、また同じ間違いをする」
+
+『何の間違いだ』
+
+「自分が誰かを、決めつけることだ」</p>${btn('部屋を調べる','room()')}`)
+}
+function trustCall(){
+ state.loop++;saveLoop();
+ end('LOCKED END',`あなたは鍵を握りしめた。
+
+「帰ってくれ」
+
+ドアの向こうで、女が泣いた。
+
+「……ごめんね」
+
+午前0時。
+
+スマホに通知が届く。
+
+送信者――「俺」。
+
+本文は一行。
+
+「だから言っただろ。開けるな」
+
+その文を読んだ瞬間、あなたは気づく。
+
+電話の声は、一度も
+「俺がお前だ」とは言っていなかった。`)
+}
+function openDoorEarly(){
+ state.loop++;saveLoop();
+ end('WHITE END',`鍵を開ける。
+
+女はあなたを見るなり、泣きながら抱きついた。
+
+不思議なほど、その体温を知っている気がした。
+
+「よかった……」
+
+その瞬間、視界が白く弾ける。
+
+最後に聞こえたのは、自分の声。
+
+「まだ早い」
+
+――23:47。`)
+}
+function thirdWay(){
+ screen(`<p class="story">あなたは電話も、女も信じない。
+
+代わりに、自分の記憶を疑う。
+
+いや。
+
+<strong>「記憶を失った」という前提そのものを疑う。</strong>
+
+知らないものを「忘れた」と呼ぶ必要はない。
+
+では、写真の中にいる男は――誰だ？</p>
+${state.seen.has('unlocked')?btn('二つの「自分の番号」を調べる','reveal1()'):btn('スマホのロックを解除する','code()')}`)
+}
+function nameRoute(){
+ screen(`<p class="story">『名前を教えて』
+
+長い沈黙。
+
+「……ミナ」
+
+何も思い出さない。
+
+それなのに。
+
+胸だけが、痛い。
+
+女――ミナが続ける。
+
+「あなたの名前は？」
+
+答えようとして、言葉が止まった。
+
+<strong>自分の名前が、分からない。</strong></p>
+${state.loop>0?btn('「俺は……誰だ？」','thirdWay()'):btn('ドアを開ける','openDoorEarly()')}`)
+}
+function reveal1(){
+ screen(`<p class="story">連絡先にある二つの番号。
+
+一つには「俺」。
+もう一つには、自分の名前らしきもの。
+
+だが着信履歴を見ると――
+
+23:47に電話をかけてきたのは
+<strong>「俺」と登録された番号。</strong>
+
+つまり画面に表示された「俺」は、
+電話の相手が自分だったという意味ではない。
+
+<strong>誰かが、その番号を「俺」という名前で登録した。</strong></p>
+${btn('写真の男を見る','reveal2()')}`)
+}
+function reveal2(){
+ screen(`<p class="story">もう一度、写真を見る。
+
+ずっと「自分」だと思っていた男。
+
+鏡を見る。
+
+似ている。
+
+だが同じではない。
+
+写真の男の左眉には、小さな傷がある。
+
+鏡の中の自分には――ない。
+
+その瞬間、頭の奥に、他人の記憶が流れ込む。
+
+病室。
+機械。
+ミナの泣き声。
+
+そして男の声。
+
+「俺が消えても、記憶だけは残せるんだろ？」</p>
+${btn('玄関を開ける','trueEnd()')}`)
+}
+function trueEnd(){
+ localStorage.setItem('2347_true','1');
+ screen(`<div class="end">TRUE END</div>
+ <p class="story">ドアを開ける。
+
+ミナはあなたの顔を見て、泣いた。
+嬉しそうには見えなかった。
+
+「……やっぱり、違う人なんだね」
+
+あなたの脳には、死んだ男の記憶の一部が移植されていた。
+
+写真も、歯ブラシも、メモも本物だった。
+ここで彼女と暮らしていたのも、本当。
+
+ただし――
+
+<strong>暮らしていたのは、あなたではない。</strong>
+
+だから彼女を知らないという感覚も、本物だった。
+
+23:47。
+
+それは男が亡くなった時刻。
+そして毎晩、移植された記憶が最も強く再生される時刻。
+
+電話の「俺」は、男が生前に残した自動音声だった。
+
+彼はあなたを守ろうとしていたのではない。
+
+ミナを守ろうとしていた。
+
+自分の記憶を持つ別人が、
+自分だと思い込み、
+彼女の人生に入り込まないように。
+
+ミナが静かに言う。
+
+「あなたは、あなたでいて」
+
+初めて時計が動く。
+
+<strong>23:48。</strong></p>
+<p class="story quote">知らない女だった。
+
+だからこそ、
+彼女を愛していた記憶だけが残っていることが、
+こんなにも悲しかった。</p>
+${btn('タイトルへ戻る','afterTrue()')}`)
+}
+function afterTrue(){state.loop=Math.max(state.loop,1);saveLoop();title()}
+function end(name,text){screen(`<div class="end">${name}</div><p class="story">${text}</p>${btn('タイトルへ戻る','title()')}`)}
+function resetGame(){localStorage.removeItem('2347_loop');localStorage.removeItem('2347_true');state={seen:new Set(),loop:0,hint:0};title()}
+title();
+</script></body></html>
