@@ -1,332 +1,40 @@
-<!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050608"><title>23:47の着信</title>
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#050608"><title>23:47</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;background:#050608;color:#eee;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;min-height:100%}
-body{display:flex;justify-content:center}#app{width:min(720px,100%);min-height:100vh;padding:env(safe-area-inset-top) 18px env(safe-area-inset-bottom)}
-.screen{min-height:94vh;display:flex;flex-direction:column;justify-content:center;animation:f .45s}@keyframes f{from{opacity:0}to{opacity:1}}
-h1{font-size:32px;letter-spacing:.12em;font-weight:500;margin:8px 0}.muted{color:#888;font-size:13px}.story{font-size:17px;line-height:2;white-space:pre-line}
-button{width:100%;background:#11141a;color:#eee;border:1px solid #2b303a;border-radius:12px;padding:15px;margin:6px 0;font-size:16px;text-align:left}
-.center{text-align:center}.clock{font-size:52px;font-variant-numeric:tabular-nums;letter-spacing:.08em;margin:22px 0}
-.room{position:relative;height:62vh;min-height:430px;border:1px solid #242933;border-radius:16px;overflow:hidden;background:linear-gradient(#0b0d12,#08090d)}
-.obj{position:absolute;background:#11151c;border:1px solid #343b47;border-radius:10px;color:#bbb;padding:10px;text-align:center;font-size:13px}
-.obj:active{background:#1a2029}.photo{left:8%;top:18%;width:25%;height:18%}.clockobj{right:8%;top:10%;width:25%}.mirror{left:10%;bottom:13%;width:25%;height:24%}.fridge{right:7%;bottom:10%;width:29%;height:38%}.door{left:40%;top:18%;width:20%;height:58%}.phone{left:37%;bottom:4%;width:26%}
-.note{border-left:2px solid #666;padding-left:14px;color:#c9c9c9}.tiny{font-size:12px;color:#777;line-height:1.7}
-.call{background:radial-gradient(circle at 50% 20%,#303642,#101216 60%);text-align:center;min-height:94vh;padding-top:12vh}
-.avatar{width:82px;height:82px;margin:auto;border-radius:50%;background:#777;display:grid;place-items:center;font-size:30px}.caller{font-size:34px;margin:14px}.callsub{color:#bbb}
-.callbuttons{display:flex;gap:40px;justify-content:center;margin-top:auto;padding-bottom:12vh}.round{width:74px;height:74px;border-radius:50%;border:0;text-align:center;margin:0;font-size:13px}.decline{background:#b33}.accept{background:#398d54}
-#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:50}.end{font-size:12px;letter-spacing:.25em;color:#888}
-input{width:100%;background:#0d1015;color:#fff;border:1px solid #333;border-radius:10px;padding:14px;font-size:26px;letter-spacing:.3em;text-align:center}
-</style></head>
-<body><main id="app"></main><div id="flash"></div>
+*{box-sizing:border-box}body{margin:0;background:#050608;color:#eee;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif}.screen{display:none;min-height:100vh;padding:28px 18px}.on{display:flex;flex-direction:column}.center{justify-content:center;align-items:center;text-align:center}h1{font-size:54px;letter-spacing:.18em;font-weight:300}button{color:#eee;background:#111219;border:1px solid #30323a;border-radius:12px;padding:13px;font:inherit}.main{margin-top:35px;min-width:180px}.muted{color:#888;font-size:12px}.story{justify-content:flex-end;padding-bottom:15vh}.text{white-space:pre-line;line-height:2;max-width:600px;width:100%;margin:auto}.top{display:flex;justify-content:space-between}.clock{font-size:25px}.room{position:relative;height:350px;border:1px solid #22242b;border-radius:16px;margin:16px 0;background:#0b0c10;overflow:hidden}.window{position:absolute;left:8%;top:10%;width:31%;height:38%;border:3px solid #292b34;background:repeating-linear-gradient(105deg,#08090d 0 18px,#30323a 19px 20px)}.door{position:absolute;right:8%;top:10%;width:28%;height:72%;border:3px solid #292b34;background:#111218}.mirror{position:absolute;left:47%;top:13%;width:14%;height:35%;border:2px solid #333640}.table{position:absolute;left:8%;bottom:18%;width:48%;border-top:5px solid #292b34}.obj{position:absolute;font-size:11px;padding:7px}.p{left:8%;bottom:4%}.s{left:25%;bottom:4%}.m{left:45%;top:53%}.d{left:48%;bottom:4%}.e{right:7%;bottom:4%}.log{white-space:pre-line;line-height:1.75;min-height:145px;padding:14px;border:1px solid #202229;border-radius:12px}.choices{display:grid;gap:8px;margin-top:9px}.inv{display:flex;gap:7px;overflow:auto;margin-top:10px}.inv button{font-size:12px;padding:8px;white-space:nowrap}.sel{outline:1px solid #aaa}.small{background:none;border:0;color:#888;font-size:12px;margin-top:12px}.overlay{display:none;position:fixed;inset:0;background:#020204f2;z-index:9;align-items:center;justify-content:center;padding:24px}.overlay.on{display:flex}.modal{max-width:430px;width:100%;text-align:center}.caller{font-size:36px;margin:15px 0 50px}.calls{display:flex;justify-content:space-around}.round{width:72px;height:72px;border-radius:50%;font-size:25px}.dialog{text-align:left;white-space:pre-line;line-height:1.9}.end{white-space:pre-line;line-height:2;max-width:560px}
+</style></head><body>
+<section id="title" class="screen on center"><h1>23:47</h1><div class="muted">THE SECOND ANNIVERSARY</div><button class="main" onclick="begin()">ã¯ããã</button></section>
+<section id="story" class="screen story" onclick="nextIntro()"><div id="storytext" class="text"></div><div class="muted center">ã¿ãããã¦é²ã</div></section>
+<section id="game" class="screen"><div class="top"><div><div class="clock">23:47</div><div class="muted">çªã®å¤ã§ã¯é¨ãéã£ã¦ããã</div></div><div id="timer">08:00</div></div>
+<div class="room"><div class="window"></div><div class="door"></div><div class="mirror"></div><div class="table"></div>
+<button class="obj p" onclick="inspect('photo')">åç</button><button class="obj s" onclick="inspect('phone')">ã¹ãã</button><button class="obj m" onclick="inspect('mirror')">é¡</button><button class="obj d" onclick="inspect('drawer')">å¼ãåºã</button><button class="obj e" onclick="inspect('door')">æ</button></div>
+<div id="log" class="log"></div><div id="choices" class="choices"></div><div id="inv" class="inv"></div><button class="small" onclick="goTitle()">ã¿ã¤ãã«ã¸æ»ã</button></section>
+<div id="call" class="overlay"><div class="modal"><div class="muted">çä¿¡</div><div class="caller">ä¸æ</div><div class="calls"><button class="round" onclick="rejectCall()">Ã</button><button class="round" onclick="answerCall()">â</button></div></div></div>
+<div id="dialogue" class="overlay"><div class="modal"><div id="dialogtext" class="dialog"></div><button class="main" onclick="closeDialogue()">éãã</button></div></div>
+<section id="ending" class="screen center"><div id="endtext" class="end"></div><button class="main" onclick="goTitle()">ã¿ã¤ãã«ã¸æ»ã</button></section>
 <script>
-const A=document.getElementById('app');
-let loop=+(localStorage.getItem('call2347loop')||0), clues=new Set(), failures=+(localStorage.getItem('call2347fail')||0);
-let ctx=null,rain=null;
-function S(h){A.innerHTML='<section class="screen">'+h+'</section>';scrollTo(0,0)}
-function B(t,f){return `<button onclick="${f}">${t}</button>`}
-function audio(){if(!ctx)ctx=new (AudioContext||webkitAudioContext)()}
-function tone(f,d=.12,v=.025){try{audio();let o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=f;o.type='sine';g.gain.value=v;o.connect(g);g.connect(ctx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);o.stop(ctx.currentTime+d)}catch(e){}}
-function ring(){audio(); [0,.45,.9].forEach(x=>setTimeout(()=>{tone(660,.18,.035);setTimeout(()=>tone(880,.2,.028),130)},x*1000))}
-function knock(){tone(115,.08,.04);setTimeout(()=>tone(100,.1,.04),180)}
-function title(){
- let x=loop?`<p class="muted">${loop==1?'……この画面を、前にも見た気がする。':'まだ、覚えてる？'}</p>`:`<p class="muted">SHORT MYSTERY</p>`;
- S(`<div class=center>${x}<h1>23:47の着信</h1><div class=clock>${loop?'23:46':'23:47'}</div><p class=tiny>音量は小さめのまま、音をONにしてください。</p>${B(loop?'もう一度、夜へ':'はじめる','start()')}<button class=tiny onclick="reset()">最初から</button></div>`)
-}
-function start(){audio(); tone(180,.08,.015); S(`<p class=story>${loop?`雨の音。
-
-目を開けた瞬間、妙な感覚がした。
-
-<strong>この天井を、知っている。</strong>
-
-いや――「知っている」ではない。
-ついさっき見たような……。
-
-時計は23:46。`:`雨の夜。
-
-見覚えがあるような、ないような部屋で目を覚ました。
-
-自分の名前さえ、すぐには出てこない。
-
-壁の時計は23:47。`}</p>${B('部屋を見る','room()')}`)}
-function room(){
- S(`<p class=muted>${loop?'二度目の部屋':'部屋'}</p><div class=room>
- <button class="obj photo" onclick="inspect('photo')">写真立て</button>
- <button class="obj clockobj" onclick="inspect('clock')">時計</button>
- <button class="obj mirror" onclick="inspect('mirror')">鏡</button>
- <button class="obj fridge" onclick="inspect('fridge')">冷蔵庫</button>
- <button class="obj door" onclick="inspect('door')">玄関</button>
- <button class="obj phone" onclick="inspect('phone')">スマホ</button>
- </div><p class=tiny>${loop?'同じ部屋なのに、前とは違って見える。':''}</p>`)
-}
+const $=s=>document.querySelector(s);let intro=0,seconds=480,timerId,selected=null,inv=[],flags={};
+const lines=[`é¨ã®é³ãããã\n\nèª°ããèµ°ã£ã¦ããã\n\nâ¦â¦ããã\nèµ°ã£ã¦ããã®ã¯ãä¿ºã ã`,`èå¾ã§ãéå±ãè»ãã\n\næ¯ãè¿ã£ãç¬éââ\n\nè¸ããä½ããè²«ããã`,`ãââã£ï¼ã\n\nç®ãè¦ã¾ããã\n\nå¨èº«ãæ±ã§æ¿¡ãã¦ããã\nè¸ãçããé ­ãå²ãããã ã`,`â¦â¦å¤¢ãã\n\næè¨ãè¦ãã\n\n23:47`,`å¤ã¯é¨ãéã£ã¦ããã\n\nè¦æ£ãã¦ããâ¦â¦ã¯ãã®é¨å±ã\n\nãªã®ã«ãä½ããããããã\n\nããã¯â¦â¦ä¿ºã®é¨å±ãã`];
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));$('#'+id).classList.add('on')}
+function tone(f=500){try{let C=window.AudioContext||window.webkitAudioContext;window.ac=window.ac||new C();if(ac.state==='suspended')ac.resume();let o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.02;o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+.12)}catch(e){}}
+function begin(){tone();intro=0;show('story');$('#storytext').textContent=lines[0]}function nextIntro(){if(++intro<lines.length)$('#storytext').textContent=lines[intro];else start()}
+function start(){show('game');seconds=480;selected=null;inv=[];flags={};render();log('â¦â¦ããã¯ãä¿ºã®é¨å±ãã');clearInterval(timerId);timerId=setInterval(tick,1000)}
+function tick(){seconds--;$('#timer').textContent=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');if(seconds===445)incoming();if(seconds===365)woman();if(seconds<=0){clearInterval(timerId);safeEnd()}}
+function log(t){$('#log').textContent=t;$('#choices').innerHTML=''}function choices(a){$('#choices').innerHTML='';a.forEach(x=>{let b=document.createElement('button');b.textContent=x[0];b.onclick=x[1];$('#choices').appendChild(b)})}
+function add(x){if(!inv.includes(x)){inv.push(x);render();tone(700)}}function render(){let d=$('#inv');d.innerHTML='';inv.forEach(x=>{let b=document.createElement('button');b.textContent=x;b.className=selected===x?'sel':'';b.onclick=()=>{selected=selected===x?null:x;render();log(selected?selected+'ãé¸ãã ãã©ãã«ä½¿ãï¼':'é¸æãè§£é¤ããã')};d.appendChild(b)})}
 function inspect(x){
- clues.add(x); let t='', extra='';
- if(x==='photo') t=loop?`写真の男と、知らない女。
-
-……待て。
-
-<strong>この写真を俺は知っている。</strong>
-
-だが女を知っているのではない。
-「この写真を見た」という記憶だけがある。
-
-写真立てを持ち上げると、裏に薄い筆圧の跡がある。`: `男と、知らない女が笑っている。
-
-男は自分によく似ている。
-
-「……俺、なのか？」
-
-写真立ては妙に重い。`;
- if(x==='clock') t=loop?`23:46。
-
-秒針がない。
-
-それなのに、次に何が起こるかを身体だけが知っている。
-
-<strong>あと一分で、電話が鳴る。</strong>`:`23:47。
-
-秒針がない。壊れているのだろうか。`;
- if(x==='mirror') t=loop?`鏡の自分。
-
-写真の男によく似ている。
-
-今度は気づく。
-
-<strong>写真の男の左眉には傷がある。
-鏡の自分にはない。</strong>`:`ひどく青ざめた男が映っている。
-
-自分だ。
-
-……たぶん。`;
- if(x==='fridge') t=loop?`冷蔵庫の扉。
-
-昨日は気づかなかった紙が、磁石の下から数ミリだけ覗いている。
-
-引き抜く。
-
-「23:47より前に眠ること
-　記憶再生が始まった場合は――」
-
-そこから先は破れている。`:`牛乳、卵、レモン。
-
-生活のメモが貼られている。
-
-その下に別の紙が重なっているようだが、端しか見えない。`;
- if(x==='door'){knock();t=loop?`ドアスコープの向こうは暗い。
-
-その瞬間。
-
-……コン、コン。
-
-まだ誰も来ていないはずなのに。
-
-<strong>「まだ開けないで」</strong>
-
-女の声がした気がした。`:`玄関。
-
-ドアスコープの向こうには誰もいない。
-
-なのに、濡れた靴の匂いがする。`}
- if(x==='phone') { t=loop?`ロック画面。
-
-なぜか暗証番号の最初の二桁だけ分かる。
-
-<strong>23</strong>
-
-残り二桁は――この夜の中にある。`:`自分のものらしいスマホ。
-
-ロックされている。
-
-4桁の暗証番号。`; extra=B('暗証番号を試す','code()')}
- S(`<p class=story>${t}</p>${extra}${B('部屋へ戻る','room()')}${clues.size>=3?B('そのとき――','incoming()'):''}`)
-}
-function incoming(){ring(); S(`<div class=call><div class=avatar>👤</div><div class=caller>俺</div><div class=callsub>携帯電話</div><div class=callbuttons><button class="round decline" onclick="decline()">拒否</button><button class="round accept" onclick="answer()">応答</button></div></div>`)}
-function decline(){fail(`着信を拒否した。
-
-すぐに玄関から女の声がする。
-
-「お願い。今度こそ――」
-
-<strong>今度こそ？</strong>
-
-画面が暗くなる。
-
-最後に時計を見る。
-
-23:47。`)}
-function answer(){tone(260,.05,.02);S(`<p class="story note">「よく聞け」
-
-自分と同じ声。
-
-「女が来る。玄関を開けるな」
-
-『お前は誰だ』
-
-${loop?`「……その質問も、前にした」
-
-背中が冷える。`:`数秒の沈黙。
-
-「俺だ」`}
-
-――ピンポーン。</p>${B('玄関へ','woman()')}${B('電話を切って部屋を調べる','room()')}`)}
-function woman(){knock();S(`<p class=story>ドアスコープの向こうに女がいる。
-
-知らない。
-
-なのに${loop?'――この姿勢まで、知っている。':'、写真の女だ。'}
-
-「お願い。開けて」
-
-『誰なんだ？』
-
-${loop?`女は答えない。
-
-代わりに言う。
-
-「……今回は、写真の裏を見た？」`:`「やっぱり……覚えてないんだね」`}</p>
-${loop?B('「写真の裏？」','photoBack()'):''}${B('開けない','lockedEnd()')}${B('開ける','whiteEnd()')}${B('部屋へ戻る','room()')}`)}
-function photoBack(){S(`<p class=story>写真立ての裏を指でなぞる。
-
-薄い紙が二重になっていた。
-剥がすと、文字が現れる。
-
-<strong>「あなたが私を知らなくても、
-あなたはあなた。
-彼にならなくていい。」</strong>
-
-署名――ミナ。
-
-知らない名前。
-
-なのに胸が痛む。</p>${B('スマホを調べる','code()')}`)}
-function code(){S(`<p class=story>暗証番号を入力する。</p><input id=c maxlength=4 inputmode=numeric placeholder="••••">${B('解除','check()')}<p class=tiny>${failures>=2?'ヒント：この夜で最も繰り返される時刻。':''}</p>`)}
-function check(){let v=document.getElementById('c').value;if(v==='2347')unlock();else{failures++;localStorage.setItem('call2347fail',failures);tone(90,.08,.02);document.querySelector('.tiny').textContent=failures>=2?'指は「23」まで覚えている。残りは、この夜で何度も見た数字。':'違う。'}}
-function unlock(){S(`<p class=story>2347。
-
-ロックが開く。
-
-連絡先に、妙な登録がある。
-
-<strong>「俺」</strong>
-
-そして、その下に別の男性名。
-
-着信履歴を見る。
-
-23:47に電話をかけてきた番号は、
-「自分の番号」ではない。
-
-<strong>誰かがその番号を「俺」と登録しただけだ。</strong>
-
-ボイスメモが一件。
-
-「23:47 / 再生 00:18」</p>${B('再生する','memo()')}`)}
-function memo(){tone(210,.12,.02);S(`<p class="story note">「もしこれを聞いているなら、また始まったんだ」
-
-自分に似た声。
-
-「彼女を知らない。それで正しい」
-
-雑音。
-
-「俺の記憶が、お前を俺だと思わせる」
-
-女の泣き声。
-
-「お願い。もう彼にならなくていい」
-
-録音終了。</p>${B('鏡を見る','reveal()')}`)}
-function reveal(){S(`<p class=story>鏡。
-
-左眉に傷はない。
-
-写真の男にはある。
-
-<strong>写真の男は、自分ではない。</strong>
-
-ようやく分かる。
-
-失った記憶を取り戻しているのではない。
-
-最初から、自分のものではない記憶を
-「思い出して」いた。</p>${B('玄関を開ける','trueEnd()')}`)}
-function lockedEnd(){fail(`鍵を握りしめる。
-
-「帰ってくれ」
-
-女はしばらく黙っていた。
-
-やがて。
-
-「……彼を守らなくていいの」
-
-足音が遠ざかる。
-
-電話がもう一度鳴る。
-
-表示は――「俺」。
-
-今度の声は言う。
-
-「違う。俺を守るな」
-
-「彼女を守れ」
-
-時計は23:47から動かない。`)}
-function whiteEnd(){fail(`鍵を開ける。
-
-女があなたを見て、泣く。
-
-「……まだ早かった」
-
-抱きしめられた瞬間、
-知らないはずの記憶が洪水のように流れ込む。
-
-海。桜。病室。
-
-そして――23:47。
-
-視界が白く弾ける。`)}
-function fail(t){loop++;localStorage.setItem('call2347loop',loop);S(`<div class=end>END</div><p class=story>${t}</p>${B('タイトルへ戻る','title()')}`)}
-function trueEnd(){localStorage.setItem('call2347true','1');S(`<div class=end>TRUE END</div><p class=story>ドアを開ける。
-
-女――ミナは、あなたの顔を見つめる。
-
-「初めまして」
-
-その言葉で、すべてが終わった。
-
-写真も生活の痕跡も本物。
-この部屋で彼女と暮らしていた男も実在した。
-
-ただし、それはあなたではない。
-
-23:47。
-男が亡くなった時刻。
-
-あなたには彼の記憶の一部が移植されていた。
-毎晩23:47、その記憶が強く再生される。
-
-電話の「俺」は、生前の男が残した自動音声。
-
-彼はあなたを守ろうとしていたのではない。
-
-<strong>ミナを、自分の記憶から守ろうとしていた。</strong>
-
-ミナが言う。
-
-「あなたは、あなたでいて」
-
-時計を見る。
-
-23:48。
-
-初めて、一分進んだ。</p><p class="story note">彼女を知らない。
-
-その感覚だけが、
-最初から最後まで正しかった。</p>${B('タイトルへ','title()')}`)}
-function reset(){localStorage.removeItem('call2347loop');localStorage.removeItem('call2347fail');localStorage.removeItem('call2347true');loop=0;failures=0;clues=new Set();title()}
-title();
+if(x==='photo'){if(selected==='ç´°ãéå·'&&!flags.back){flags.back=1;selected=null;render();add('åçã®åãç«¯');log('éå·ã§è£æ¿ãå¤ããã\n\nä¿ºã¨ãç¥ããªãå¥³ã¨ââå·¦çã«å·ã®ããç·ã\n\nè£ã«ã8/17ãã¨æ¸ããã¦ããã\n\nâ¦â¦ä½ã®æ¥ã ï¼');return}log('ä¿ºã¨ç¥ããªãå¥³ãåã£ã¦ããã\n\nâ¦â¦èª°ã ããã®å¥³ã\n\nè£æ¿ã«å°ããªç©´ããããæã§ã¯éããªãã');return}
+if(x==='drawer'){if(!flags.metal){flags.metal=1;add('ç´°ãéå·');log('å¥¥ã«ç´°ãéå±çãããã\nä½ããéãããããã ã')}else log('ããä½ããªãã');return}
+if(x==='mirror'){log(flags.key?'é¡ãè¦ãã\n\nä¸ç¬ââä¿ºã®å§¿ãæ¶ããã\n\nâ¦â¦é ­çã®ããã ã':'éãããä¿ºã®é¡ã\nè¸ãã¾ã çãã');return}
+if(x==='phone'){pass();return}
+if(x==='door'){if(selected==='è¨æ¶ã­ã¼'){selected=null;render();openTruth()}else log('éããªãã\néµç©´ã§ã¯ãªããè¦æ£ããªãç«¯å­ãããã\n\nåããå´ã«èª°ãããæ°ãããã');return}}
+function pass(){let v=prompt('4æ¡ã®æè¨¼çªå·');if(v===null)return;if(v==='0817'){flags.key=1;add('è¨æ¶ã­ã¼');log('è§£é¤ãããã\n\nã¡ã¢ãä¸ä»¶ã\n\nã8/17ãäºåº¦ç®ã®å½æ¥ãä»å¹´ã¯æ·±å±¤ãéãããªãã\n\nå½æ¥â¦â¦ï¼ èª°ã®ï¼\n\nç«¯æ«ã«ãè¨æ¶ã­ã¼ããç¾ããã')}else log('éãã\n\né©å½ãªæ°å­ã§ã¯ãªãã\nä¿ºã«é¢ä¿ããæ¥ä»â¦â¦ï¼')}
+function incoming(){$('#call').classList.add('on');window.ring=setInterval(()=>tone(540),600)}function stop(){clearInterval(ring);$('#call').classList.remove('on')}
+function rejectCall(){stop();log('åã£ãã\n\nããã¡ãã»ã¼ã¸ã\nãé ¼ããåºã¦ããã\n\nâ¦â¦èª°ã ã')}
+function answerCall(){stop();$('#dialogtext').textContent='ãããï¼èããããï¼ï¼ã\n\nãâ¦â¦èª°ã ï¼ã\n\næ²é»ã\n\nãâ¦â¦ãããä»å¹´ããã\n\nãããããä½ããããªããããåãããããªããã\n\nãä»ããä¿ºããã£ã¡ã¸è¡ãã\n\nââåããã\n\né¨ãè¡ãä¿ºãè¦ãè¾¼ããå·¦çã«å·ã®ããç·ã';$('#dialogue').classList.add('on')}
+function closeDialogue(){$('#dialogue').classList.remove('on');log('å·¦çã«å·ã®ããç·ã\n\nããã¤ãªã®ãï¼\n\nè¸ãã¾ãçãã\n\nâ¦â¦ä¿ºã¯ãããã¤ã«ä½ããããï¼')}
+function woman(){tone(120);setTimeout(()=>tone(120),350);log('ã³ã³ãã³ã³ã\n\nå¥³ãâ¦â¦ãããã§ãããï¼ã\n\nããé¡ããç§ãèª°ãªã®ããæãåºããã¨ããªãã¦ããã\n\nãããããåºã¡ããã¡ã\n\nããã¨å°ãã ããâ¦â¦ãé¡ãã')}
+function openTruth(){clearInterval(timerId);log('è¨æ¶ã­ã¼ãç«¯å­ã«å·®ãè¾¼ãã\n\nå¥³ãã ãï¼ï¼ã\n\nç·ãããï¼ãã®åã ãã¯éãããªï¼ã\n\nââãã£ã±ãã\nããã«äºäººãé ãã¦ãããã®ãããã');choices([['æãéãã',truth],['ã¾ã éããªã',()=>log('æãæ­¢ããã\næ®ãæéã ããæ¸ã£ã¦ããã')]])}
+function truth(){show('ending');$('#endtext').textContent='é¨ã\n\nå·¥äºç¾å ´ã\néå±ãè»ãã\n\nââéãã\nèª°ãã«åºãããããããªãã\n\nå´©ããééª¨ããä¿ºãæ¼ãæ½°ããã\n\nãããï¼ï¼ãã£ããããï¼ï¼ã\n\nå·¦çã«å·ã®ããç·ãèµ°ã£ã¦ããã\nä¿ºãæ®ºããç·ãããªãã\nä¿ºãå©ãããã¨ãã¦ããã\n\n23:47\n\nââè¨é²çµäºââ\næ­»äº¡ç¢ºèªã23æ47å\näºæçºçæ¥ã2å¹´å 8æ17æ¥\n\nãâ¦â¦æ­»äº¡ï¼ã\nãèª°ãï¼ã\n\nãã ã£ã¦ä¿ºã¯â¦â¦ããã«ããã ãï¼ã\n\n\né¨å±ãæ¶ããã\næºããçªããé¨ãã\n\næå¾ã«é¡ãè¦ãã\n\nããã«ã¯ââèª°ãããªãã\n\nå¥³ããããã­ãããªãã®è¨æ¶ãæ®ããã®ã\n\nç·ãå»å¹´ãåããã¨ãèµ·ãããå½æ¥ã®23:47ã«ãªãã¨äºæã®è¨æ¶ãæ´èµ°ãããã ããæ­¢ãã¦ããã ã\n\nä¿ºã«ã¯è¸ããªãã\né ­ããªãã\né¨ãéã£ã¦ããªãã£ãã\n\nçã¿ãããè¨æ¶ã ã£ãã\n\nããããâ¦â¦ä¿ºã¯èª°ãªãã ï¼ã\n\n23:48'}
+function safeEnd(){show('ending');$('#endtext').textContent='00:00\n\né ­çãæ¶ããã\né¨é³ãæ­¢ãã ã\n\nå¥³ãâ¦â¦ããã£ãã\nç·ãä»å¹´ããæ»ã£ã¦ãããªã\n\nââçºä½ã¯åæããã\n\nã ãããã®æã®åããã«ä½ããã£ãã®ãã\nä¿ºã¯ã¾ã ç¥ããªãã\n\nWAIT END'}
+function goTitle(){clearInterval(timerId);document.querySelectorAll('.overlay').forEach(x=>x.classList.remove('on'));show('title')}
 </script></body></html>
